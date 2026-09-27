@@ -7,6 +7,7 @@
   --color-very-dark-gray: 79 79 79;
   --color-light-gray: 243 244 246;
   --color-light-gray-stroke: 223 223 223;
+  --color-dark-green: 28 125 69; /* #1C7D45 */
 }
 
 /* Tailwind's "tw-" prefix (tailwind.config.js) also applies to the dark
@@ -20,6 +21,7 @@ html.tw-dark {
   --color-very-dark-gray: 208 208 208;
   --color-light-gray: 38 38 38;
   --color-light-gray-stroke: 58 58 58;
+  --color-dark-green: 41 188 104; /* #29BC68 (light-green) */
 }
 
 html,
