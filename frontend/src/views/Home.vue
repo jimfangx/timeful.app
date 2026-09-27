@@ -34,7 +34,7 @@
       </v-fade-transition>
 
       <div
-        class="tw-rounded-md tw-px-6 tw-py-4 sm:tw-mx-4 sm:tw-bg-[#f3f3f366]"
+        class="tw-rounded-md tw-px-6 tw-py-4 sm:tw-mx-4 sm:tw-bg-[#f3f3f366] dark:sm:tw-bg-[#ffffff0d]"
         v-if="!loading || eventsNotEmpty"
       >
         <div

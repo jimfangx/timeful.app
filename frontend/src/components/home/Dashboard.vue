@@ -1,5 +1,7 @@
 <template>
-  <div class="tw-rounded-md tw-px-6 tw-py-4 sm:tw-mx-4 sm:tw-bg-[#f3f3f366]">
+  <div
+    class="tw-rounded-md tw-px-6 tw-py-4 sm:tw-mx-4 sm:tw-bg-[#f3f3f366] dark:sm:tw-bg-[#ffffff0d]"
+  >
     <div class="tw-mb-3 tw-flex tw-items-center tw-justify-between">
       <div class="tw-flex tw-flex-col">
         <div

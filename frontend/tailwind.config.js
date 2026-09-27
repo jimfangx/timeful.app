@@ -7,6 +7,9 @@ module.exports = {
     "./src/**/*.{vue,js,ts,jsx,tsx}",
   ],
   important: true,
+  // The "tw-" prefix below is also applied to the dark mode class itself, so
+  // the class toggled onto <html> for dark mode is actually `tw-dark`, not
+  // the usual `dark` (see App.vue/index.html/index.css).
   darkMode: "class",
   theme: {
     extend: {

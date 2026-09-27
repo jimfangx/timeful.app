@@ -236,6 +236,13 @@ html {
   outline: red solid;
   border-radius: 3px;
 }
+
+/** Unchecked checkboxes/radios in dark mode default to solid white, which
+  reads much louder than the muted rgba(0,0,0,0.54) used in light mode */
+.theme--dark.v-icon.mdi-checkbox-blank-outline,
+.theme--dark.v-icon.mdi-radiobox-blank {
+  color: rgba(255, 255, 255, 0.54) !important;
+}
 </style>
 
 <script>
@@ -482,7 +489,9 @@ export default {
     darkMode: {
       immediate: true,
       handler(darkMode) {
-        document.documentElement.classList.toggle("dark", darkMode)
+        // Tailwind's "tw-" prefix (tailwind.config.js) also applies to the
+        // dark mode class, so the class here must be "tw-dark", not "dark".
+        document.documentElement.classList.toggle("tw-dark", darkMode)
         this.$vuetify.theme.dark = darkMode
       },
     },

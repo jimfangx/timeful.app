@@ -9,7 +9,9 @@
   --color-light-gray-stroke: 223 223 223;
 }
 
-html.dark {
+/* Tailwind's "tw-" prefix (tailwind.config.js) also applies to the dark
+   mode class, so the class here must be "tw-dark", not "dark". */
+html.tw-dark {
   --color-white: 30 30 30;
   --color-off-white: 42 42 42;
   --color-black: 242 242 242;
