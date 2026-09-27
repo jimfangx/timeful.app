@@ -190,7 +190,10 @@ html {
   filter: drop-shadow(0 0.5px 2px rgba(0, 0, 0, 0.1)) !important;
   box-shadow: inset 0 -1px 0 0 rgba(0, 0, 0, 0.1) !important;
   border-radius: theme("borderRadius.md") !important;
-  border: 1px solid #4f4f4f1f !important;
+  /* Uses the same --color-light-gray-stroke variable as the app's other
+    subtle borders (see index.css) instead of a hardcoded gray, so it stays
+    visible in dark mode instead of a near-invisible gray-on-gray line. */
+  border: 1px solid rgb(var(--color-light-gray-stroke)) !important;
 }
 .v-menu__content {
   box-shadow: 0px 5px 5px -1px rgba(0, 0, 0, 0.1),
