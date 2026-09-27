@@ -24,7 +24,7 @@ import (
 	"schej.it/server/responses"
 	"schej.it/server/services/calendar"
 	"schej.it/server/services/gcloud"
-	"schej.it/server/services/listmonk"
+	"schej.it/server/services/mailgun"
 	"schej.it/server/utils"
 )
 
@@ -202,13 +202,8 @@ func createEvent(c *gin.Context) {
 			}
 
 			// Add attendees to attendees array and send invite emails
-			availabilityGroupInviteEmailId := 9
 			for _, email := range payload.Attendees {
-				listmonk.SendEmailAddSubscriberIfNotExist(email, availabilityGroupInviteEmailId, bson.M{
-					"ownerName": ownerName,
-					"groupName": event.Name,
-					"groupUrl":  fmt.Sprintf("%s/g/%s", utils.GetBaseUrl(), event.GetId()),
-				}, false)
+				mailgun.SendGroupInviteEmail(email, ownerName, event.Name, fmt.Sprintf("%s/g/%s", utils.GetBaseUrl(), event.GetId()))
 				attendees = append(attendees, models.Attendee{Email: email, Declined: utils.FalsePtr(), EventId: event.Id})
 			}
 
@@ -407,14 +402,11 @@ func editEvent(c *gin.Context) {
 			}
 		}
 
+		groupUrl := fmt.Sprintf("%s/g/%s", utils.GetBaseUrl(), event.GetId())
+
 		for _, addedEmail := range added {
 			// Send invite email
-			availabilityGroupInviteEmailId := 9
-			listmonk.SendEmailAddSubscriberIfNotExist(addedEmail.Value, availabilityGroupInviteEmailId, bson.M{
-				"ownerName": ownerName,
-				"groupName": event.Name,
-				"groupUrl":  fmt.Sprintf("%s/g/%s", utils.GetBaseUrl(), event.GetId()),
-			}, false)
+			mailgun.SendGroupInviteEmail(addedEmail.Value, ownerName, event.Name, groupUrl)
 			db.AttendeesCollection.InsertOne(context.Background(), models.Attendee{
 				Email:    addedEmail.Value,
 				Declined: utils.FalsePtr(),
@@ -425,15 +417,9 @@ func editEvent(c *gin.Context) {
 		// Send group update emails
 		if len(added) > 0 {
 			emails := utils.Map(added, func(a utils.ElementWithIndex[string]) string { return a.Value })
-			addedAttendeeEmailId := 11
 
 			for _, keptEmail := range kept {
-				listmonk.SendEmailAddSubscriberIfNotExist(keptEmail.Value, addedAttendeeEmailId, bson.M{
-					"ownerName": ownerName,
-					"groupName": event.Name,
-					"groupUrl":  fmt.Sprintf("%s/g/%s", utils.GetBaseUrl(), event.GetId()),
-					"emails":    emails,
-				}, false)
+				mailgun.SendAddedAttendeeEmail(keptEmail.Value, ownerName, event.Name, groupUrl, emails)
 			}
 		}
 	}
@@ -1004,21 +990,11 @@ func updateEventResponse(c *gin.Context) {
 			}
 
 			if event.Type == models.GROUP {
-				someoneRespondedEmailId := 13
-				listmonk.SendEmail(creator.Email, someoneRespondedEmailId, bson.M{
-					"groupName":      event.Name,
-					"ownerName":      creator.FirstName,
-					"respondentName": respondentName,
-					"groupUrl":       fmt.Sprintf("%s/g/%s", utils.GetBaseUrl(), event.GetId()),
-				})
+				groupUrl := fmt.Sprintf("%s/g/%s", utils.GetBaseUrl(), event.GetId())
+				mailgun.SendSomeoneRespondedEmail(creator.Email, event.Name, creator.FirstName, respondentName, groupUrl, true)
 			} else {
-				someoneRespondedEmailId := 10
-				listmonk.SendEmail(creator.Email, someoneRespondedEmailId, bson.M{
-					"eventName":      event.Name,
-					"ownerName":      creator.FirstName,
-					"respondentName": respondentName,
-					"eventUrl":       fmt.Sprintf("%s/e/%s", utils.GetBaseUrl(), event.GetId()),
-				})
+				eventUrl := fmt.Sprintf("%s/e/%s", utils.GetBaseUrl(), event.GetId())
+				mailgun.SendSomeoneRespondedEmail(creator.Email, event.Name, creator.FirstName, respondentName, eventUrl, false)
 			}
 		}()
 	}
@@ -1043,13 +1019,13 @@ func updateEventResponse(c *gin.Context) {
 				return
 			}
 
-			sendEmailAfterXResponsesEmailId := 14
-			listmonk.SendEmail(creator.Email, sendEmailAfterXResponsesEmailId, bson.M{
-				"eventName":    event.Name,
-				"ownerName":    creator.FirstName,
-				"eventUrl":     fmt.Sprintf("%s/e/%s", utils.GetBaseUrl(), event.GetId()),
-				"numResponses": len(eventResponses) + 1, // We add 1 because eventResponses is the old event responses before the current user is added
-			})
+			mailgun.SendXResponsesEmail(
+				creator.Email,
+				event.Name,
+				creator.FirstName,
+				fmt.Sprintf("%s/e/%s", utils.GetBaseUrl(), event.GetId()),
+				len(eventResponses)+1, // We add 1 because eventResponses is the old event responses before the current user is added
+			)
 		}()
 	}
 
@@ -1277,11 +1253,7 @@ func userResponded(c *gin.Context) {
 		eventUrl := fmt.Sprintf("%s/e/%s", baseUrl, eventId)
 
 		// Send email
-		everyoneRespondedEmailTemplateId := 8
-		listmonk.SendEmail(owner.Email, everyoneRespondedEmailTemplateId, bson.M{
-			"eventName": event.Name,
-			"eventUrl":  eventUrl,
-		})
+		mailgun.SendEveryoneRespondedEmail(owner.Email, event.Name, eventUrl)
 	}
 
 	c.JSON(http.StatusOK, gin.H{})

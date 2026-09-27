@@ -9,7 +9,6 @@ import (
 	"math/big"
 	"net/http"
 	"os"
-	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -28,6 +27,7 @@ import (
 	"schej.it/server/services/auth"
 	"schej.it/server/services/calendar"
 	"schej.it/server/services/listmonk"
+	"schej.it/server/services/mailgun"
 	"schej.it/server/services/microsoftgraph"
 	"schej.it/server/utils"
 )
@@ -489,14 +489,7 @@ func sendOtp(c *gin.Context) {
 		logger.StdErr.Panicln(err)
 	}
 
-	otpTemplateId, err := strconv.Atoi(os.Getenv("LISTMONK_OTP_EMAIL_TEMPLATE_ID"))
-	if err != nil {
-		logger.StdErr.Panicln("LISTMONK_OTP_EMAIL_TEMPLATE_ID is not set or invalid")
-	}
-
-	listmonk.SendEmailAddSubscriberIfNotExist(email, otpTemplateId, bson.M{
-		"code": code,
-	}, false, "Timeful <noreply@timeful.app>")
+	mailgun.SendOtpEmail(email, code)
 
 	c.JSON(http.StatusOK, gin.H{})
 }
