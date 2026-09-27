@@ -245,16 +245,21 @@ html {
 }
 
 /** Dialogs/menus in dark mode use a lighter background than the page (see
-  --color-page-bg/--color-white in index.css), but that contrast alone can be
-  subtle on some displays. A drop shadow (used in light mode) is invisible
-  against a dark page, so add a faint border instead to keep their edges
-  clearly visible. Scoped to the dialog's own top-level card (rather than
-  every .v-card) because several dialog bodies (e.g. NewEvent) render their
-  own nested v-card, which would otherwise get a second, redundant border
-  partway down the dialog. */
+  --color-page-bg/--color-white in index.css), but that contrast alone is too
+  subtle on its own: the dialog's scrim only dims the page to ~rgb(25,25,25),
+  barely different from the card's rgb(30,30,30). Vuetify's default elevation
+  shadow (a few px of soft rgba(0,0,0,.2)) all but disappears against that.
+  Use a much heavier, layered shadow instead - a strong dark shadow still
+  reads clearly here because it darkens the already-dim scrim further, plus a
+  crisp semi-opaque edge line. Scoped to the dialog's own top-level card
+  (rather than every .v-card) because several dialog bodies (e.g. NewEvent)
+  render their own nested v-card, which would otherwise get a second,
+  redundant outline partway down the dialog. */
 .v-dialog > .theme--dark.v-card,
 .theme--dark.v-menu__content {
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border: none !important;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.18),
+    0 16px 48px rgba(0, 0, 0, 0.8), 0 6px 16px rgba(0, 0, 0, 0.6) !important;
 }
 </style>
 
