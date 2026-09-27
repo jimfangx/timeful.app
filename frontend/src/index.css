@@ -1,4 +1,5 @@
 :root {
+  --color-page-bg: 255 255 255;
   --color-white: 255 255 255;
   --color-off-white: 242 242 242;
   --color-black: 0 0 0;
@@ -13,6 +14,13 @@
 /* Tailwind's "tw-" prefix (tailwind.config.js) also applies to the dark
    mode class, so the class here must be "tw-dark", not "dark". */
 html.tw-dark {
+  /* Darker than --color-white (card/dialog surfaces) on purpose: cards and
+     dialogs need to read as visibly "elevated" above the page, the same way
+     a light-mode shadow reads against a white page. A dark-mode box-shadow
+     is invisible against a dark page, so the separation has to come from a
+     background contrast instead (the same base/surface split Material
+     Design's dark theme uses: #121212 page, #1e1e1e surface). */
+  --color-page-bg: 18 18 18;
   --color-white: 30 30 30;
   --color-off-white: 42 42 42;
   --color-black: 242 242 242;
@@ -26,7 +34,7 @@ html.tw-dark {
 
 html,
 body {
-  background-color: rgb(var(--color-white));
+  background-color: rgb(var(--color-page-bg));
 }
 
 @tailwind base;

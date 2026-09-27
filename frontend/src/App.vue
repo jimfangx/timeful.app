@@ -243,6 +243,17 @@ html {
 .theme--dark.v-icon.mdi-radiobox-blank {
   color: rgba(255, 255, 255, 0.54) !important;
 }
+
+/** Cards/dialogs/menus in dark mode use a lighter background than the page
+  (see --color-page-bg/--color-white in index.css), but that contrast alone
+  can be subtle on some displays. A drop shadow (used in light mode) is
+  invisible against a dark page, so add a faint border instead to keep their
+  edges clearly visible. */
+.theme--dark.v-card,
+.theme--dark.v-sheet,
+.theme--dark.v-menu__content {
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
 </style>
 
 <script>
