@@ -58,7 +58,12 @@
         </div>
       </div>
 
-      <div v-if="!loading || eventsNotEmpty" class="tw-flex tw-justify-center">
+      <!-- Hidden in dark mode: each animation frame is a .jpg with a solid
+      white background baked in (JPG doesn't support transparency) -->
+      <div
+        v-if="!loading || eventsNotEmpty"
+        class="tw-flex tw-justify-center dark:tw-hidden"
+      >
         <div
           class="animate-boba tw-size-48 tw-bg-contain tw-bg-no-repeat sm:tw-size-48"
         ></div>
