@@ -16,7 +16,11 @@ export default new Vuetify({
       dark: {
         primary: tailwind.theme.colors["light-green"],
         error: tailwind.theme.colors.red,
-        background: "#1e1e1e",
+        // background (the page, behind .v-application) is darker than
+        // surface (cards/dialogs/menus) on purpose, so elevated surfaces are
+        // visibly distinct from the page instead of blending into it -
+        // matches --color-page-bg/--color-white in index.css.
+        background: "#121212",
         surface: "#1e1e1e",
       },
     },

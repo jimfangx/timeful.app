@@ -190,7 +190,10 @@ html {
   filter: drop-shadow(0 0.5px 2px rgba(0, 0, 0, 0.1)) !important;
   box-shadow: inset 0 -1px 0 0 rgba(0, 0, 0, 0.1) !important;
   border-radius: theme("borderRadius.md") !important;
-  border: 1px solid #4f4f4f1f !important;
+  /* Uses the same --color-light-gray-stroke variable as the app's other
+    subtle borders (see index.css) instead of a hardcoded gray, so it stays
+    visible in dark mode instead of a near-invisible gray-on-gray line. */
+  border: 1px solid rgb(var(--color-light-gray-stroke)) !important;
 }
 .v-menu__content {
   box-shadow: 0px 5px 5px -1px rgba(0, 0, 0, 0.1),
@@ -235,6 +238,31 @@ html {
 .error--text .v-input__slot {
   outline: red solid;
   border-radius: 3px;
+}
+
+/** Unchecked checkboxes/radios in dark mode default to solid white, which
+  reads much louder than the muted rgba(0,0,0,0.54) used in light mode */
+.theme--dark.v-icon.mdi-checkbox-blank-outline,
+.theme--dark.v-icon.mdi-radiobox-blank {
+  color: rgba(255, 255, 255, 0.54) !important;
+}
+
+/** Dialogs/menus in dark mode use a lighter background than the page (see
+  --color-page-bg/--color-white in index.css), but that contrast alone is too
+  subtle on its own. A dark drop shadow doesn't reliably fix it either: a
+  dialog often opens directly over other cards (e.g. the New Event dialog
+  over the Dashboard/Tools cards on the home page), which are the same dark
+  tone as the dialog itself, so darkening the backdrop further does nothing
+  there. A bright, fairly opaque border works regardless of what's behind the
+  dialog. Scoped to the dialog's own top-level card (rather than every
+  .v-card) because several dialog bodies (e.g. NewEvent) render their own
+  nested v-card, which would otherwise get a second, redundant outline
+  partway down the dialog. */
+.v-dialog > .theme--dark.v-card,
+.theme--dark.v-menu__content {
+  border: none !important;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.4),
+    0 16px 48px rgba(0, 0, 0, 0.8), 0 6px 16px rgba(0, 0, 0, 0.6) !important;
 }
 </style>
 
@@ -482,7 +510,9 @@ export default {
     darkMode: {
       immediate: true,
       handler(darkMode) {
-        document.documentElement.classList.toggle("dark", darkMode)
+        // Tailwind's "tw-" prefix (tailwind.config.js) also applies to the
+        // dark mode class, so the class here must be "tw-dark", not "dark".
+        document.documentElement.classList.toggle("tw-dark", darkMode)
         this.$vuetify.theme.dark = darkMode
       },
     },

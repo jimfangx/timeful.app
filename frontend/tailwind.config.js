@@ -7,6 +7,9 @@ module.exports = {
     "./src/**/*.{vue,js,ts,jsx,tsx}",
   ],
   important: true,
+  // The "tw-" prefix below is also applied to the dark mode class itself, so
+  // the class toggled onto <html> for dark mode is actually `tw-dark`, not
+  // the usual `dark` (see App.vue/index.html/index.css).
   darkMode: "class",
   theme: {
     extend: {
@@ -21,7 +24,10 @@ module.exports = {
       "light-green": "#29BC68",
       "ligher-green": "#EBF7EF",
       green: "#00994C",
-      "dark-green": "#1C7D45",
+      // "dark-green" is used for section headings, so it's backed by a CSS
+      // variable (see index.css) and lightens in dark mode for legibility,
+      // the same way the neutral colors above do.
+      "dark-green": "rgb(var(--color-dark-green) / <alpha-value>)",
       "darkest-green": "#007F36",
       "light-blue": "#53A2FF",
       blue: "#006BE8",

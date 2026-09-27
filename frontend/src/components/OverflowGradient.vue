@@ -3,8 +3,11 @@
     v-if="showGradient"
     class="tw-pointer-events-none tw-absolute tw-bottom-0 tw-left-0 tw-right-0 tw-z-20 tw-flex tw-h-16 tw-items-end tw-justify-center"
     :style="{
+      // Uses the same --color-white variable as the surface it overlays
+      // (see index.css) so the fade matches the card color in both themes,
+      // instead of always fading to a hardcoded white.
       background:
-        'linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%)',
+        'linear-gradient(to bottom, rgb(var(--color-white) / 0) 0%, rgb(var(--color-white) / 1) 100%)',
     }"
   >
     <v-btn

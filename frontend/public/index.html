@@ -10,7 +10,9 @@
             ? window.matchMedia &&
               window.matchMedia("(prefers-color-scheme: dark)").matches
             : stored == "true"
-        if (dark) d.documentElement.classList.add("dark")
+        // Tailwind's "tw-" prefix (tailwind.config.js) also applies to the
+        // dark mode class, so the class here must be "tw-dark", not "dark".
+        if (dark) d.documentElement.classList.add("tw-dark")
       })(document)
     </script>
     <!-- Google Tag Manager -->
