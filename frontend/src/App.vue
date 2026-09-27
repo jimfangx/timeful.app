@@ -244,13 +244,15 @@ html {
   color: rgba(255, 255, 255, 0.54) !important;
 }
 
-/** Cards/dialogs/menus in dark mode use a lighter background than the page
-  (see --color-page-bg/--color-white in index.css), but that contrast alone
-  can be subtle on some displays. A drop shadow (used in light mode) is
-  invisible against a dark page, so add a faint border instead to keep their
-  edges clearly visible. */
-.theme--dark.v-card,
-.theme--dark.v-sheet,
+/** Dialogs/menus in dark mode use a lighter background than the page (see
+  --color-page-bg/--color-white in index.css), but that contrast alone can be
+  subtle on some displays. A drop shadow (used in light mode) is invisible
+  against a dark page, so add a faint border instead to keep their edges
+  clearly visible. Scoped to the dialog's own top-level card (rather than
+  every .v-card) because several dialog bodies (e.g. NewEvent) render their
+  own nested v-card, which would otherwise get a second, redundant border
+  partway down the dialog. */
+.v-dialog > .theme--dark.v-card,
 .theme--dark.v-menu__content {
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
