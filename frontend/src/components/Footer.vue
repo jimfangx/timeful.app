@@ -163,8 +163,19 @@
       <div
         class="tw-mt-8 tw-border-t tw-border-white/20 tw-pt-4 tw-text-sm tw-text-white/80"
       >
-        &copy; {{ new Date().getFullYear() }} Liu Laboratories LLC. All rights
-        reserved.
+        This is a cloned copy of the original
+        <a
+          href="https://github.com/schej-it/timeful.app"
+          target="_blank"
+          class="tw-underline"
+          >Timeful repository</a
+        >, with
+        <a
+          href="https://github.com/jimfangx/timeful.app"
+          target="_blank"
+          class="tw-underline"
+          >modifications</a
+        >.
       </div>
     </div>
   </footer>
